@@ -1,0 +1,57 @@
+Ponder Library
+==============
+This library provides interfaces to generically model problem and solution
+spaces, as well as strategies for searching the solution space effectively.
+
+
+
+Things that need modeling:
+* point in the problem space / initial conditions - LoanSet
+* point in solution space / solution to problem - List<PayAllocation>
+* problem/solution state (mutable) - ???
+* strategy for producing solutions to problems - Population<?>
+
+
+Loan - name, payment, interest, principal (immutable)
+LoanSet - name, budget, loans[] (immutable)
+
+Account(Loan) - balance, age, payment history, etc
+
+
+
+
+Domain<S>
+Objective<S, R>
+
+Strategy<D extends Domain<S>, O extends Objective<S, R>>
+  public D getDomain();
+  public O getObjective();
+
+  public S bestSolution();
+  public R bestResult();
+
+  public void search();
+
+
+
+
+
+
+class RandomSearch<D extends Domain<S>, O extends Objective<S, R>> implements Strategy<D, O>
+  public RandomSearch<D domain, O objective, int iterations)
+
+class NumberVectors implements Domain<Vector<Double>>
+  public NumberVectors(int length, int range)
+
+class SumOfSquares implements Objective<Vector<Double>, Double>
+  public SumOfSquares()
+
+
+domain = new NumberVectors(3, 1.0);
+objective = new SumOfSquares();
+strategy = new RandomSearch<NumberVectors, SumOfSquares>(domain, objective);
+
+while ( !strategy.done() ) strategy.search();
+
+// strategy.bestSolution();
+// strategy.bestResult();
