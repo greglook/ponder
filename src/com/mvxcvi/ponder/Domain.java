@@ -12,12 +12,8 @@ package com.mvxcvi.ponder;
  */
 public interface Domain<S> {
 
-    // TODO: fill in more functions
-
     public S random();
 
-    public S randomNeighbor(S solution);
-
-    public S randomNeighbor(S solution, double distance);
+    // TODO: fill in more functions
 
 }

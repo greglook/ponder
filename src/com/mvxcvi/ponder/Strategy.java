@@ -14,14 +14,14 @@ package com.mvxcvi.ponder;
  *
  * @author Greg Look (greg@mvxcvi.com)
  */
-public interface Strategy<D extends Domain<S>, O extends Objective<S, R>> {
+public interface Strategy<S, R extends Comparable<R>> {
 
     /**
      * Gets the domain being searched by this strategy.
      *
      * @return solution domain
      */
-    public D getDomain();
+    public Domain<S> getDomain();
 
 
     /**
@@ -29,7 +29,7 @@ public interface Strategy<D extends Domain<S>, O extends Objective<S, R>> {
      *
      * @return objective function
      */
-    public O getObjective();
+    public Objective<S, R> getObjective();
 
 
     /**

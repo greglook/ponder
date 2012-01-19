@@ -1,5 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
 <project name="Ponder" basedir="." default="build">
-    
+
     <!-- build properties -->
     <property name="src.dir"           value="src" />
     <property name="build.dir"         value="build" />
@@ -21,7 +23,7 @@
     <!-- compile source files -->
     <target name="compile" depends="prepare">
         <mkdir dir="${build.classes.dir}" />
-        <javac srcdir="${src.dir}" destdir="${build.classes.dir" debug="on" debuglevel="lines,vars,source">
+        <javac srcdir="${src.dir}" destdir="${build.classes.dir}" debug="on" debuglevel="lines,vars,source">
             <compilerarg value="-Xlint:unchecked" />
         </javac>
     </target>
@@ -29,7 +31,7 @@
     <!-- create a jar of the project -->
     <target name="jar" depends="compile">
         <mkdir dir="${build.lib.dir}" />
-        <jar destfile="${build.lib.dir}/${ant.project.name}.jar" basedir="${classes.dir}" />
+        <jar destfile="${build.lib.dir}/${ant.project.name}.jar" basedir="${build.classes.dir}" />
     </target>
 
     <!-- build the project -->
