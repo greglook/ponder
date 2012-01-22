@@ -1,4 +1,4 @@
-/* ... */
+/* Copyright 2012 Greg Look. All rights reserved. */
 
 package com.mvxcvi.ponder.condition;
 

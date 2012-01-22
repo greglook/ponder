@@ -1,4 +1,4 @@
-/* ... */
+/* Copyright 2012 Greg Look. All rights reserved. */
 
 package com.mvxcvi.ponder.example;
 
@@ -15,7 +15,7 @@ import java.util.Vector;
 
 
 /**
- * ...
+ * Simple implementation of a search algorithm over a quadratic search space.
  *
  * @author Greg Look (greg@mvxcvi.com)
  */
