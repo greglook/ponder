@@ -23,7 +23,11 @@
     <!-- compile source files -->
     <target name="compile" depends="prepare">
         <mkdir dir="${build.classes.dir}" />
-        <javac srcdir="${src.dir}" destdir="${build.classes.dir}" debug="on" debuglevel="lines,vars,source">
+        <javac srcdir="${src.dir}"
+               destdir="${build.classes.dir}"
+               debug="on"
+               debuglevel="lines,vars,source"
+               includeantruntime="false">
             <compilerarg value="-Xlint:unchecked" />
         </javac>
     </target>
