@@ -3,6 +3,8 @@
 package com.mvxcvi.ponder.condition;
 
 
+import com.mvxcvi.ponder.Condition;
+import com.mvxcvi.ponder.Result;
 import com.mvxcvi.ponder.util.StringUtils;
 
 import java.util.ArrayList;
@@ -16,10 +18,10 @@ import java.util.List;
  *
  * @author Greg Look (greg@mvxcvi.com)
  */
-public class OrCondition implements Condition {
+public class OrCondition<V, S> implements Condition<V, S> {
 
     /** The set of sub-conditions. */
-    private final List<Condition> conditions;
+    private final List<Condition<? super V, ? super S>> conditions;
 
 
 
@@ -28,12 +30,12 @@ public class OrCondition implements Condition {
      *
      * @param conditions  collection of conditions
      */
-    public OrCondition(Collection<Condition> conditions) {
+    public OrCondition(Collection<Condition<? super V, ? super S>> conditions) {
 
-        if ( conditions == null ) throw new IllegalArgumentException("Property 'conditions' must not be null");
-        if ( conditions.isEmpty() ) throw new IllegalArgumentException("Property 'conditions' must not be empty");
+        if ( conditions == null ) throw new IllegalArgumentException("OrCondition must be constructed with non-null subconditions");
+        if ( conditions.isEmpty() ) throw new IllegalArgumentException("OrCondition must be constructed with non-empty subconditions");
 
-        this.conditions = Collections.unmodifiableList(new ArrayList<Condition>(conditions));
+        this.conditions = Collections.unmodifiableList(new ArrayList<Condition<? super V, ? super S>>(conditions));
 
     }
 
@@ -43,14 +45,14 @@ public class OrCondition implements Condition {
      *
      * @return subconditions
      */
-    public List<Condition> getConditions() { return conditions; }
+    public List<Condition<? super V, ? super S>> getConditions() { return conditions; }
 
 
     @Override
-    public void update(double score) {
+    public void update(Result<? extends V, ? extends S> result) {
 
-        for ( Condition condition : conditions ) {
-            condition.update(score);
+        for ( Condition<? super V, ? super S> condition : conditions ) {
+            condition.update(result);
         }
 
     }
@@ -59,7 +61,7 @@ public class OrCondition implements Condition {
     @Override
     public boolean satisfied() {
 
-        for ( Condition condition : conditions ) {
+        for ( Condition<? super V, ? super S> condition : conditions ) {
             if ( condition.satisfied() ) return true;
         }
 

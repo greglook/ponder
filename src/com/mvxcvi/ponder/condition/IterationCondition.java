@@ -3,6 +3,10 @@
 package com.mvxcvi.ponder.condition;
 
 
+import com.mvxcvi.ponder.Condition;
+import com.mvxcvi.ponder.Result;
+
+
 /**
  * This condition is satisfied after a fixed number of scores have been
  * calculated. In practice, this provides an upper bound on the number of
@@ -10,7 +14,7 @@ package com.mvxcvi.ponder.condition;
  *
  * @author Greg Look (greg@mvxcvi.com)
  */
-public class IterationCondition implements Condition {
+public class IterationCondition implements Condition<Object, Object> {
 
     /** The number of iterations required. */
     private final int limit;
@@ -27,7 +31,7 @@ public class IterationCondition implements Condition {
      */
     public IterationCondition(int limit) {
 
-        if ( limit < 1 ) throw new IllegalArgumentException("Property 'limit' must be positive: " + limit);
+        if ( limit < 1 ) throw new IllegalArgumentException("IterationCondition must be constructed with positive limit: " + limit);
 
         this.limit = limit;
 
@@ -43,7 +47,7 @@ public class IterationCondition implements Condition {
 
 
     @Override
-    public void update(double score) {
+    public void update(Result<? extends Object, ? extends Object> result) {
 
         iterations++;
 
