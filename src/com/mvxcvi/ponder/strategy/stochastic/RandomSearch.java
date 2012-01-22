@@ -6,7 +6,7 @@ package com.mvxcvi.ponder.strategy.stochastic;
 import com.mvxcvi.ponder.Domain;
 import com.mvxcvi.ponder.Objective;
 import com.mvxcvi.ponder.Result;
-import com.mvxcvi.ponder.Strategy;
+import com.mvxcvi.ponder.strategy.AbstractStrategy;
 
 
 /**
@@ -22,15 +22,7 @@ import com.mvxcvi.ponder.Strategy;
  *
  * @author Greg Look (greg@mvxcvi.com)
  */
-public class RandomSearch<V, S> implements Strategy<V, S> {
-
-    /** Search vector domain. */
-    private final Domain<V> domain;
-
-    /** Objective function. */
-    private final Objective<V, S> objective;
-
-
+public class RandomSearch<V, S> extends AbstractStrategy<Domain<V>, V, S> {
 
     /**
      * Creates a new Random Search strategy.
@@ -40,11 +32,7 @@ public class RandomSearch<V, S> implements Strategy<V, S> {
      */
     public RandomSearch(Domain<V> domain, Objective<V, S> objective) {
 
-        if ( domain    == null ) throw new IllegalArgumentException("RandomSearch cannot be constructed with null domain");
-        if ( objective == null ) throw new IllegalArgumentException("RandomSearch cannot be constructed with null objective");
-
-        this.domain = domain;
-        this.objective = objective;
+        super(domain, objective);
 
     }
 
@@ -52,9 +40,7 @@ public class RandomSearch<V, S> implements Strategy<V, S> {
     @Override
     public Result<V, S> search() {
 
-        V candidate = domain.random();
-
-        return new Result<V, S>(objective, candidate);
+        return evaluate(domain.random());
 
     }
 

@@ -5,28 +5,22 @@ package com.mvxcvi.ponder.strategy.stochastic;
 
 import com.mvxcvi.ponder.Objective;
 import com.mvxcvi.ponder.Result;
-import com.mvxcvi.ponder.Strategy;
 import com.mvxcvi.ponder.domain.DifferentialDomain;
+import com.mvxcvi.ponder.strategy.AbstractStrategy;
 
 
 /**
- * This strategy ... as candidates.
+ * This strategy iteratively searches candidate vectors within some step size.
+ * The algorithm trials larger and smaller step sizes each iteration and adopts
+ * the larger step size only if it results in an improvement.
  *
- * Adaptive Random Search is an extension of the Random Search algorithm.
+ * Adaptive Random Search belongs to the Stochastic Optimization and Global
+ * Optimization family of algorithms. It is a direct search technique, as it
+ * does not require derivatives of the search space.
  *
  * @author Greg Look (greg@mvxcvi.com)
  */
-public class AdaptiveRandomSearch<V, D, S> implements Strategy<V, S> {
-
-    ///// CONFIGURATION /////
-
-    /** Search vector domain. */
-    private final DifferentialDomain<V, D> domain;
-
-    /** Objective function. */
-    private final Objective<V, S> objective;
-
-
+public class AdaptiveRandomSearch<V, D, S> extends AbstractStrategy<DifferentialDomain<V, D>, V, S> {
 
     ///// PROPERTIES /////
 
@@ -35,9 +29,6 @@ public class AdaptiveRandomSearch<V, D, S> implements Strategy<V, S> {
 
     /** Number of iterations since the current result changed. */
     private int stasis = 0;
-
-    /** Current search result. */
-    private Result<V, S> current;
 
     /** Current step size. */
     private D stepSize;
@@ -92,14 +83,11 @@ public class AdaptiveRandomSearch<V, D, S> implements Strategy<V, S> {
      */
     public AdaptiveRandomSearch(DifferentialDomain<V, D> domain, Objective<V, S> objective, double stepFactor) {
 
-        if ( domain    == null ) throw new IllegalArgumentException("AdaptiveRandomSearch cannot be constructed with null domain");
-        if ( objective == null ) throw new IllegalArgumentException("AdaptiveRandomSearch cannot be constructed with null objective");
+        super(domain, objective);
+
         if ( stepFactor <= 0.0 ) throw new IllegalArgumentException("AdaptiveRandomSearch must have a positive initial step size factor");
 
-        this.domain = domain;
-        this.objective = objective;
-
-        current = new Result<V, S>(objective, domain.random());
+        current = evaluate(domain.random());
         stepSize = domain.scale(domain.diameter(), stepFactor);
 
     }
@@ -112,12 +100,12 @@ public class AdaptiveRandomSearch<V, D, S> implements Strategy<V, S> {
         D largeStepSize = domain.scale(stepSize, (iteration++ % trialPeriod) == 0 ? largeFactor : smallFactor);
 
         // select close and far neighbors
-        Result<V, S> close = new Result<V, S>(objective, domain.randomNeighbor(current.getVector(), stepSize));
-        Result<V, S> far   = new Result<V, S>(objective, domain.randomNeighbor(current.getVector(), largeStepSize));
+        Result<V, S> close = evaluate(domain.randomNeighbor(current.getVector(), stepSize));
+        Result<V, S> far   = evaluate(domain.randomNeighbor(current.getVector(), largeStepSize));
 
         // check for improvement
-        if (( close.compareTo(current) <= 0 ) || ( far.compareTo(current) <= 0 )) {
-            if ( close.compareTo(far) <= 0 ) {
+        if ( close.improves(current) || far.improves(current) ) {
+            if ( close.improves(far) ) {
                 current = close;
             } else {
                 current = far;

@@ -69,6 +69,19 @@ public class Result<V, S> implements Comparable<Result<V, S>> {
     public S getValue() { return value; }
 
 
+    /**
+     * Alias for {@link compareTo}.
+     *
+     * @param other  other result to compare to
+     * @return true if this result is at least as good as the other
+     */
+    public boolean improves(Result<V, S> other) {
+
+        return compareTo(other) <= 0;
+
+    }
+
+
     @Override
     public int compareTo(Result<V, S> other) {
 
