@@ -3,24 +3,38 @@
 package com.mvxcvi.ponder;
 
 
+import java.util.Comparator;
+
+
 /**
- * An objective produces results by evaluating candidate solutions. The result
- * should measure the optimality of the given solution in a comparable manner.
- *
- * Objective instances should be immutable.
+ * An objective function produces solution scores by evaluating candidate search
+ * vectors. The solution should measure the optimality of the given vector in an
+ * ordered manner.
  *
  * @author Greg Look (greg@mvxcvi.com)
  */
-public interface Objective<S, R extends Comparable<R>> {
+public interface Objective<V, S> extends Comparator<S> {
 
     /**
-     * Computes a result representing the objective value of the given
-     * candidate solution. This method should return <code>null</code> if the
-     * candidate is completely inviable.
+     * Computes a solution value from the given search vector. This method
+     * should return <code>null</code> if the vector is completely inviable.
      *
-     * @param soultion  candidate solution vector
-     * @return evaluation result
+     * @param vector  search vector
+     * @return solution value
      */
-    public R evaluate(S solution);
+    public S evaluate(V vector);
+
+
+    /**
+     * Compares two solution values for order. Returns a negative integer,
+     * zero, or a positive integer as the first argument is better, equivalent
+     * to, or worse than the second. This means that by default, numeric
+     * value comparisons will result in minimizing searches.
+     *
+     * @param a  first value
+     * @param b  second value
+     * @return ordering result
+     */
+    public int compare(S a, S b);
 
 }
