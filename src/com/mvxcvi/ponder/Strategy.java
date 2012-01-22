@@ -13,7 +13,7 @@ package com.mvxcvi.ponder;
  *
  * @author Greg Look (greg@mvxcvi.com)
  */
-public interface Strategy<V, R> {
+public interface Strategy<V, S> {
 
     /**
      * Performs an iteration to produce a candidate search result.
@@ -22,6 +22,6 @@ public interface Strategy<V, R> {
      *
      * @return candidate solution
      */
-    public Result<V, R> search();
+    public Result<V, S> search();
 
 }

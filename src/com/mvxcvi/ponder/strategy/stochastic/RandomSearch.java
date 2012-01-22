@@ -5,78 +5,49 @@ package com.mvxcvi.ponder.strategy.stochastic;
 
 import com.mvxcvi.ponder.Domain;
 import com.mvxcvi.ponder.Objective;
-import com.mvxcvi.ponder.strategy.AbstractStrategy;
+import com.mvxcvi.ponder.Result;
+import com.mvxcvi.ponder.Strategy;
 
 
 /**
- * Random search iteratively selects random solutions and retains the best one
- * found.
+ * This strategy iteratively selects random vectors in the search space as
+ * candidates.
  *
  * @author Greg Look (greg@mvxcvi.com)
  */
-public class RandomSearch<S, R extends Comparable<R>> extends AbstractStrategy<S, R> {
+public class RandomSearch<V, S> implements Strategy<V, S> {
 
-    ///// CONFIGURATION /////
+    /** Search vector domain. */
+    private final Domain<V> domain;
 
-    /** Number of iterations to complete. */
-    private final int maxIterations;
-
-
-
-    ///// VARIABLES /////
-
-    /** Current iteration number. */
-    private int iteration = 0;
+    /** Objective function. */
+    private final Objective<V, S> objective;
 
 
-
-    ///// INITIALIZATION /////
 
     /**
-     * Creates a new random search strategy.
+     * Creates a new RandomSearch.
      *
-     * @param domain      solution domain
-     * @param objective   search objective
-     * @param iterations  number of iterations to search for
+     * @param domain     search domain
+     * @param objective  objective function
      */
-    public RandomSearch(Domain<S> domain, Objective<S, R> objective, int iterations) {
+    public RandomSearch(Domain<V> domain, Objective<V, S> objective) {
 
-        super(domain, objective);
+        if ( domain    == null ) throw new IllegalArgumentException("RandomSearch cannot be constructed with null domain");
+        if ( objective == null ) throw new IllegalArgumentException("RandomSearch cannot be constructed with null objective");
 
-        if ( iterations < 1 ) throw new IllegalArgumentException("RandomSearch must perform at least one iteration: " + iterations);
-
-        maxIterations = iterations;
-
-    }
-
-
-
-    ///// STRATEGY EXECUTION /////
-
-    @Override
-    public double progress() {
-
-        return (double)iteration/maxIterations;
+        this.domain = domain;
+        this.objective = objective;
 
     }
 
 
     @Override
-    public boolean isDone() {
+    public Result<V, S> search() {
 
-        return iteration >= maxIterations;
+        V candidate = domain.random();
 
-    }
-
-
-    @Override
-    public void search() {
-
-        S candidate = domain.random();
-
-        evaluate(candidate);
-
-        iteration++;
+        return new Result<V, S>(objective, candidate);
 
     }
 
