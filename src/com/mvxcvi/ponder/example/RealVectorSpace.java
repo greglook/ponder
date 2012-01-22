@@ -10,16 +10,19 @@ import java.util.Vector;
 
 
 /**
- * ...
+ * This class models real vector spaces with arbitrary dimensionality.
  *
  * @author Greg Look (greg@mvxcvi.com)
  */
 public class RealVectorSpace implements Domain<Vector<Double>> {
 
+    /** Internal random number generator. */
     private final Random random;
 
+    /** Number of dimensions. */
     private final int dimension;
 
+    /** Range of permitted coordinate values. */
     private final double range;
 
 

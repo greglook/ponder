@@ -9,15 +9,20 @@ import java.util.Vector;
 
 
 /**
- * ...
+ * This class models an objective to minimize the sum of the squares of the
+ * coordinates in a given search vector, after some offset.
  *
  * @author Greg Look (greg@mvxcvi.com)
  */
 public class SumOfSquares implements Objective<Vector<Double>, Double> {
 
+    /** Offset values. */
     private final Vector<Double> offset;
 
 
+    /**
+     * Constructs a new objective with no offset.
+     */
     public SumOfSquares() {
 
         this(null);
@@ -25,6 +30,11 @@ public class SumOfSquares implements Objective<Vector<Double>, Double> {
     }
 
 
+    /**
+     * Constructs an objective with the given offset.
+     *
+     * @param offset  optional vector of coordinate offsets
+     */
     public SumOfSquares(Vector<Double> offset) {
 
         this.offset = offset;
@@ -33,13 +43,13 @@ public class SumOfSquares implements Objective<Vector<Double>, Double> {
 
 
     @Override
-    public Double evaluate(Vector<Double> solution) {
+    public Double evaluate(Vector<Double> vector) {
 
         double sum = 0.0;
 
-        for ( int i = 0; i < solution.size(); i++ ) {
+        for ( int i = 0; i < vector.size(); i++ ) {
 
-            double coordinate = solution.get(i);
+            double coordinate = vector.get(i);
 
             if (( offset != null ) && ( i < offset.size() )) {
                 coordinate += offset.get(i);
@@ -50,6 +60,15 @@ public class SumOfSquares implements Objective<Vector<Double>, Double> {
         }
 
         return sum;
+
+    }
+
+
+    @Override
+    public int compare(Double a, Double b) {
+
+        // minimize a
+        return a.compareTo(b);
 
     }
 
