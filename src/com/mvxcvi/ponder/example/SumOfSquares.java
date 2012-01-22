@@ -3,7 +3,7 @@
 package com.mvxcvi.ponder.example;
 
 
-import com.mvxcvi.ponder.Objective;
+import com.mvxcvi.ponder.objective.MinimizingObjective;
 
 import java.util.Vector;
 
@@ -14,7 +14,7 @@ import java.util.Vector;
  *
  * @author Greg Look (greg@mvxcvi.com)
  */
-public class SumOfSquares implements Objective<Vector<Double>, Double> {
+public class SumOfSquares extends MinimizingObjective<Vector<Double>, Double> {
 
     /** Offset values. */
     private final Vector<Double> offset;
@@ -60,15 +60,6 @@ public class SumOfSquares implements Objective<Vector<Double>, Double> {
         }
 
         return sum;
-
-    }
-
-
-    @Override
-    public int compare(Double a, Double b) {
-
-        // minimize a
-        return a.compareTo(b);
 
     }
 
