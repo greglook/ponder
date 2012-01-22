@@ -73,6 +73,22 @@ public class RealVectorSpace implements DifferentialDomain<Vector<Double>, Doubl
     }
 
 
+    @Override
+    public Double diameter() {
+
+        return 2.0*range;
+
+    }
+
+
+    @Override
+    public Double scale(Double delta, double factor) {
+
+        return delta*factor;
+
+    }
+
+
 
     ///// HELPER METHODS /////
 

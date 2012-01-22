@@ -44,16 +44,7 @@ public class Example {
         final RealVectorSpace domain = new RealVectorSpace(dimension, range);
         final SumOfSquares objective = new SumOfSquares(offset);
 
-        final AdaptiveRandomSearch<Vector<Double>, Double, Double> arsStrategy = new AdaptiveRandomSearch<Vector<Double>, Double, Double>(domain, objective) {
-
-            @Override
-            protected Double initializeStepSize() { return 0.05*range; }
-
-            @Override
-            protected Double scaleStepSize(Double current, double factor) { return current*factor; }
-
-        };
-
+        final AdaptiveRandomSearch<Vector<Double>, Double, Double> arsStrategy = new AdaptiveRandomSearch<Vector<Double>, Double, Double>(domain, objective, 0.05);
         Condition<? super Vector<Double>, ? super Double> limit = new IterationCondition(iterations);
 
         Search<Vector<Double>, Double> search = new Search<Vector<Double>, Double>(arsStrategy, limit) {

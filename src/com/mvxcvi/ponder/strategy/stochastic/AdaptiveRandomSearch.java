@@ -16,15 +16,15 @@ import com.mvxcvi.ponder.domain.DifferentialDomain;
  *
  * @author Greg Look (greg@mvxcvi.com)
  */
-public abstract class AdaptiveRandomSearch<V, D, S> implements Strategy<V, S> {
+public class AdaptiveRandomSearch<V, D, S> implements Strategy<V, S> {
 
     ///// CONFIGURATION /////
 
     /** Search vector domain. */
-    protected final DifferentialDomain<V, D> domain;
+    private final DifferentialDomain<V, D> domain;
 
     /** Objective function. */
-    protected final Objective<V, S> objective;
+    private final Objective<V, S> objective;
 
 
 
@@ -86,19 +86,21 @@ public abstract class AdaptiveRandomSearch<V, D, S> implements Strategy<V, S> {
     /**
      * Creates a new Adaptive Random Search strategy.
      *
-     * @param domain       search domain
-     * @param objective    objective function
+     * @param domain      search domain
+     * @param objective   objective function
+     * @param stepFactor  initial step size factor
      */
-    public AdaptiveRandomSearch(DifferentialDomain<V, D> domain, Objective<V, S> objective) {
+    public AdaptiveRandomSearch(DifferentialDomain<V, D> domain, Objective<V, S> objective, double stepFactor) {
 
         if ( domain    == null ) throw new IllegalArgumentException("AdaptiveRandomSearch cannot be constructed with null domain");
         if ( objective == null ) throw new IllegalArgumentException("AdaptiveRandomSearch cannot be constructed with null objective");
+        if ( stepFactor <= 0.0 ) throw new IllegalArgumentException("AdaptiveRandomSearch must have a positive initial step size factor");
 
         this.domain = domain;
         this.objective = objective;
 
         current = new Result<V, S>(objective, domain.random());
-        stepSize = initializeStepSize();
+        stepSize = domain.scale(domain.diameter(), stepFactor);
 
     }
 
@@ -107,7 +109,7 @@ public abstract class AdaptiveRandomSearch<V, D, S> implements Strategy<V, S> {
     public Result<V, S> search() {
 
         // calculate scaled-up step size
-        D largeStepSize = scaleStepSize(stepSize, (iteration++ % trialPeriod) == 0 ? largeFactor : smallFactor);
+        D largeStepSize = domain.scale(stepSize, (iteration++ % trialPeriod) == 0 ? largeFactor : smallFactor);
 
         // select close and far neighbors
         Result<V, S> close = new Result<V, S>(objective, domain.randomNeighbor(current.getVector(), stepSize));
@@ -123,20 +125,12 @@ public abstract class AdaptiveRandomSearch<V, D, S> implements Strategy<V, S> {
             }
             stasis = 0;
         } else if ( stasis++ >= stasisLimit ) {
-            stepSize = scaleStepSize(stepSize, 1/smallFactor);
+            stepSize = domain.scale(stepSize, 1/smallFactor);
             stasis = 0;
         }
 
         return current;
 
     }
-
-
-
-    ///// INTERNAL METHODS /////
-
-    protected abstract D initializeStepSize();
-
-    protected abstract D scaleStepSize(D current, double factor);
 
 }
