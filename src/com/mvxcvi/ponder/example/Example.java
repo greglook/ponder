@@ -8,7 +8,7 @@ import com.mvxcvi.ponder.condition.IterationCondition;
 import com.mvxcvi.ponder.Result;
 import com.mvxcvi.ponder.Search;
 import com.mvxcvi.ponder.Strategy;
-import com.mvxcvi.ponder.strategy.stochastic.RandomSearch;
+import com.mvxcvi.ponder.strategy.stochastic.AdaptiveRandomSearch;
 import com.mvxcvi.ponder.util.StringUtils;
 
 import java.util.Vector;
@@ -28,9 +28,9 @@ public class Example {
             System.exit(1);
         }
 
-        int iterations = Integer.parseInt(args[0]);
-        int dimension = Integer.parseInt(args[1]);
-        double range = ( args.length >= 3 ) ? Double.parseDouble(args[2]) : 1.0;
+        final int iterations = Integer.parseInt(args[0]);
+        final int dimension = Integer.parseInt(args[1]);
+        final double range = ( args.length >= 3 ) ? Double.parseDouble(args[2]) : 1.0;
 
         Vector<Double> offset = null;
         if ( args.length > 3 ) {
@@ -41,20 +41,29 @@ public class Example {
         System.out.printf("Searching %d-D vector space over [-%.2f, %.2f] with %d iterations\n", dimension, range, range, iterations);
         if ( offset != null ) System.out.printf("Objective is offset by [%s]\n", StringUtils.join(offset, ", ", "%6.2f"));
 
-        RealVectorSpace domain = new RealVectorSpace(dimension, range);
-        SumOfSquares objective = new SumOfSquares(offset);
+        final RealVectorSpace domain = new RealVectorSpace(dimension, range);
+        final SumOfSquares objective = new SumOfSquares(offset);
 
-        Strategy<Vector<Double>, Double> strategy = new RandomSearch<Vector<Double>, Double>(domain, objective);
+        final AdaptiveRandomSearch<Vector<Double>, Double, Double> arsStrategy = new AdaptiveRandomSearch<Vector<Double>, Double, Double>(domain, objective) {
+
+            @Override
+            protected Double initializeStepSize() { return 0.05*range; }
+
+            @Override
+            protected Double scaleStepSize(Double current, double factor) { return current*factor; }
+
+        };
+
         Condition<? super Vector<Double>, ? super Double> limit = new IterationCondition(iterations);
 
-        Search<Vector<Double>, Double> search = new Search<Vector<Double>, Double>(strategy, limit) {
+        Search<Vector<Double>, Double> search = new Search<Vector<Double>, Double>(arsStrategy, limit) {
 
             @Override
             protected void onSearch(Result<Vector<Double>, Double> candidate) {
                 if ( candidate == null ) {
-                    System.out.printf("%3d) candidate null\n", iterations());
+                    System.out.printf("%3d) step %.2f | candidate null\n", iterations(), arsStrategy.getStepSize());
                 } else {
-                    System.out.printf("%3d) [%s] => %.2f vs %s\n", iterations(),
+                    System.out.printf("%3d) step %.2f | [%s] => %.2f vs %s\n", iterations(), arsStrategy.getStepSize(),
                         StringUtils.join(candidate.getVector(), ", ", "%6.2f"),
                         candidate.getValue(),
                         ( best == null ) ? "no best result" : String.format("best of %.2f", best.getValue()));

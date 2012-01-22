@@ -3,7 +3,7 @@
 package com.mvxcvi.ponder.example;
 
 
-import com.mvxcvi.ponder.Domain;
+import com.mvxcvi.ponder.domain.DifferentialDomain;
 
 import java.util.Random;
 import java.util.Vector;
@@ -14,7 +14,7 @@ import java.util.Vector;
  *
  * @author Greg Look (greg@mvxcvi.com)
  */
-public class RealVectorSpace implements Domain<Vector<Double>> {
+public class RealVectorSpace implements DifferentialDomain<Vector<Double>, Double> {
 
     /** Internal random number generator. */
     private final Random random;
@@ -50,9 +50,35 @@ public class RealVectorSpace implements Domain<Vector<Double>> {
 
         Vector<Double> vector = new Vector<Double>(dimension);
 
-        for ( int i = 0; i < dimension; i++ ) vector.add(range*(2.0*random.nextDouble() - 1.0));
+        for ( int i = 0; i < dimension; i++ ) vector.add(rand(-range, range));
 
         return vector;
+
+    }
+
+
+    @Override
+    public Vector<Double> randomNeighbor(Vector<Double> vector, Double delta) {
+
+        Vector<Double> neighbor = new Vector<Double>(dimension);
+
+        for ( int i = 0; i < dimension; i++ ) {
+            double min = Math.max(-range, vector.get(i) - delta);
+            double max = Math.min( range, vector.get(i) + delta);
+            neighbor.add(i, rand(min, max));
+        }
+
+        return neighbor;
+
+    }
+
+
+
+    ///// HELPER METHODS /////
+
+    private double rand(double min, double max) {
+
+        return min + (max - min)*random.nextDouble();
 
     }
 
