@@ -10,8 +10,15 @@ import com.mvxcvi.ponder.Strategy;
 
 
 /**
- * This strategy iteratively selects random vectors in the search space as
- * candidates.
+ * This strategy selects random vectors in the search space as candidates.
+ *
+ * Random Search belongs to the fields of Stochastic Optimization and Global
+ * Optimization. Random search is a direct search method as it does not require
+ * derivatives to search a continuous domain.
+ *
+ * The strategy of Random Search is to sample solutions from across the entire
+ * search domain using a uniform probability distribution. Each candidate is
+ * independent of the samples that came before it.
  *
  * @author Greg Look (greg@mvxcvi.com)
  */
@@ -26,7 +33,7 @@ public class RandomSearch<V, S> implements Strategy<V, S> {
 
 
     /**
-     * Creates a new RandomSearch.
+     * Creates a new Random Search strategy.
      *
      * @param domain     search domain
      * @param objective  objective function
