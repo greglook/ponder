@@ -1,11 +1,12 @@
-Ponder Library
-==============
-This library provides interfaces to generically model problem and solution
-spaces, as well as strategies for searching the solution space effectively.
+# Ponder Library
+
+This is a Java library which provides interfaces to generically model problem
+and solution spaces, as well as strategies for searching the solution space
+effectively.
 
 
-Function Optimization
----------------------
+## Function Optimization
+
 Function optimization is a search for a combination of parameters which minimize
 or maximize some ordinal quantity (commonly a scalar _score_ or _cost_) assigned
 by an objective function.
@@ -27,8 +28,8 @@ is through the space X and the result (x, y) is the optimal vector x with the
 best y value found.
 
 
-Function Approximation
-----------------------
+## Function Approximation
+
 Function approximation is the problem of finding a function (f) that
 approximates a target function (g), where typically the approximated function
 is selected based on a sample of observations (x, also referred to as the
