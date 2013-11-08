@@ -42,3 +42,9 @@ In approximation we have:
 
 The problem is to find a model f which approximates the function g. Given new
 input vector x, the model will predict the output y.
+
+
+## License
+
+This is free and unencumbered software released into the public domain.
+See the UNLICENSE file for more information.
