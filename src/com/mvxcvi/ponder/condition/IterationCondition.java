@@ -16,13 +16,21 @@ import com.mvxcvi.ponder.Result;
  */
 public class IterationCondition implements Condition<Object, Object> {
 
+    ///// CONFIGURATION /////
+
     /** The number of iterations required. */
     private final int limit;
 
-    /** The current number of iterations. */
-    private int iterations = 0;
 
 
+    ///// PROPERTIES /////
+
+    /** The current iteration. */
+    private int iteration = 0;
+
+
+
+    ///// INITIALIZATION /////
 
     /**
      * Creates a new condition at the given iteration count.
@@ -38,6 +46,9 @@ public class IterationCondition implements Condition<Object, Object> {
     }
 
 
+
+    ///// ACCESSORS /////
+
     /**
      * Gets the iteration limit for this condition.
      *
@@ -46,10 +57,21 @@ public class IterationCondition implements Condition<Object, Object> {
     public int getLimit() { return limit; }
 
 
+    /**
+     * Gets the current iteration.
+     *
+     * @return number of update calls
+     */
+    public int currentIteration() { return iteration; }
+
+
+
+    ///// CONDITION METHODS /////
+
     @Override
     public void update(Result<? extends Object, ? extends Object> result) {
 
-        iterations++;
+        iteration++;
 
     }
 
@@ -57,7 +79,7 @@ public class IterationCondition implements Condition<Object, Object> {
     @Override
     public boolean satisfied() {
 
-        return iterations >= limit;
+        return iteration >= limit;
 
     }
 
@@ -65,7 +87,8 @@ public class IterationCondition implements Condition<Object, Object> {
     @Override
     public String toString() {
 
-        return String.format("(iterations >= %d)", limit);
+        return String.format("(%1$siteration%1$s | %d >= %d )",
+            satisfied() ? "+" : "-", iteration, limit);
 
     }
 

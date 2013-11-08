@@ -58,7 +58,7 @@ public class Result<V, S> implements Comparable<Result<V, S>> {
      *
      * @return search vector
      */
-    public V getVector() { return vector; }
+    public V getVector() { return vector; } // TODO: change these to #vector and #value
 
 
     /**

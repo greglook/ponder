@@ -3,42 +3,42 @@
 <project name="Ponder" basedir="." default="build">
 
     <!-- build properties -->
-    <property name="src.dir"           value="src" />
-    <property name="build.dir"         value="build" />
-    <property name="build.classes.dir" value="${build.dir}/classes" />
-    <property name="build.lib.dir"     value="${build.dir}/lib" />
-    <property name="build.doc.dir"     value="${build.dir}/doc" />
+    <property name="src.dir"           value="src"/>
+    <property name="build.dir"         value="build"/>
+    <property name="build.classes.dir" value="${build.dir}/classes"/>
+    <property name="build.lib.dir"     value="${build.dir}/lib"/>
+    <property name="build.doc.dir"     value="${build.dir}/doc"/>
 
     <!-- clean build artifacts -->
     <target name="clean">
-        <delete dir="${build.dir}" />
+        <delete dir="${build.dir}"/>
     </target>
 
     <!-- initialize the build directory -->
     <target name="prepare">
-        <tstamp />
-        <mkdir dir="${build.dir}" />
+        <tstamp/>
+        <mkdir dir="${build.dir}"/>
     </target>
 
     <!-- compile source files -->
     <target name="compile" depends="prepare">
-        <mkdir dir="${build.classes.dir}" />
+        <mkdir dir="${build.classes.dir}"/>
         <javac srcdir="${src.dir}"
                destdir="${build.classes.dir}"
                debug="on"
                debuglevel="lines,vars,source"
                includeantruntime="false">
-            <compilerarg value="-Xlint:unchecked" />
+            <compilerarg value="-Xlint:unchecked"/>
         </javac>
     </target>
 
     <!-- create a jar of the project -->
     <target name="jar" depends="compile">
-        <mkdir dir="${build.lib.dir}" />
-        <jar destfile="${build.lib.dir}/${ant.project.name}.jar" basedir="${build.classes.dir}" />
+        <mkdir dir="${build.lib.dir}"/>
+        <jar destfile="${build.lib.dir}/${ant.project.name}.jar" basedir="${build.classes.dir}"/>
     </target>
 
     <!-- build the project -->
-    <target name="build" depends="jar" />
+    <target name="build" depends="jar"/>
 
 </project>

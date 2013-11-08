@@ -11,14 +11,14 @@ package com.mvxcvi.ponder;
  *
  * @author Greg Look (greg@mvxcvi.com)
  */
-public interface Condition<V, S> {
+public interface Condition<X, Y> {
 
     /**
      * Updates the condition with a new best search result.
      *
      * @param result  current best search result
      */
-    public void update(Result<? extends V, ? extends S> result);
+    public void update(Result<? extends X, ? extends Y> result);
 
 
     /**

@@ -13,18 +13,26 @@ import com.mvxcvi.ponder.Result;
  *
  * @author Greg Look (greg@mvxcvi.com)
  */
-public class ThresholdCondition<S extends Comparable<S>> implements Condition<Object, S> {
+public class ThresholdCondition<Y extends Comparable<Y>> implements Condition<Object, Y> {
+
+    ///// CONFIGURATION /////
 
     /** The value threshold. */
-    private final S threshold;
+    private final Y threshold;
 
-    /** Whether the score must be above (true) or below (false) the threshold. */
+    /** Whether the value must be above (true) or below (false) the threshold. */
     private final boolean positive;
 
+
+
+    ///// PROPERTIES /////
+
     /** The current value. */
-    private S value = null;
+    private Y value = null;
 
 
+
+    ///// INITIALIZATION /////
 
     /**
      * Creates a new condition at the given threshold.
@@ -32,7 +40,7 @@ public class ThresholdCondition<S extends Comparable<S>> implements Condition<Ob
      * @param threshold  value threshold
      * @param positive   true if the score must be above the threshold
      */
-    public ThresholdCondition(S threshold, boolean positive) {
+    public ThresholdCondition(Y threshold, boolean positive) {
 
         if ( threshold == null ) throw new IllegalArgumentException("ThresholdCondition must be constructed with non-null threshold");
 
@@ -42,16 +50,30 @@ public class ThresholdCondition<S extends Comparable<S>> implements Condition<Ob
     }
 
 
+
+    ///// ACCESSORS /////
+
     /**
      * Gets the threshold value for this condition.
      *
      * @return threshold value
      */
-    public S getThreshold() { return threshold; }
+    public Y getThreshold() { return threshold; }
 
+
+    /**
+     * Gets the current value used by this condition.
+     *
+     * @return last updated value
+     */
+    public Y currentValue() { return value; }
+
+
+
+    ///// CONDITION METHODS /////
 
     @Override
-    public void update(Result<? extends Object, ? extends S> result) {
+    public void update(Result<? extends Object, ? extends Y> result) {
 
         value = result.getValue();
 
@@ -75,7 +97,8 @@ public class ThresholdCondition<S extends Comparable<S>> implements Condition<Ob
     @Override
     public String toString() {
 
-        return String.format("(value %s %s)", positive ? ">=" : "<=", threshold);
+        return String.format("(%1$sthreshold%1$s | %s %s %s)",
+            value, positive ? ">=" : "<=", threshold);
 
     }
 

@@ -30,6 +30,7 @@ public abstract class AbstractStrategy<D extends Domain<V>, V, S> implements Str
 
     /** Current (best) search result. */
     protected Result<V, S> current;
+    public Result<V, S> currentResult() { return current; }
 
 
 
